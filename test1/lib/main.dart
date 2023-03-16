@@ -1,12 +1,34 @@
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MaterialApp(
-    home: MainScreen(),
+    home: SingInScreen(),
   ));
 }
+//day5
+class LoadScreen extends StatelessWidget {
+  const LoadScreen({Key? key}) : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        child: Column(
+          children: [Text("data")],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+//day4
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -20,15 +42,18 @@ class MainScreen extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Container(
-                  width: double.infinity,
-                  // decoration: BoxDecoration(
-                  //     borderRadius:
-                  //         BorderRadiusDirectional.all(Radius.circular(25))),
-                  // clipBehavior: Clip.antiAliasWithSaveLayer,
-                  color: Color(0xff406A52),
-                  child:Image(image: AssetImage("assets/images/img.png"),fit: BoxFit.fill,),
-
-              ),),
+                width: double.infinity,
+                // decoration: BoxDecoration(
+                //     borderRadius:
+                //         BorderRadiusDirectional.all(Radius.circular(25))),
+                // clipBehavior: Clip.antiAliasWithSaveLayer,
+                color: Color(0xff406A52),
+                child: Image(
+                  image: AssetImage("assets/images/img.png"),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
             Expanded(
                 flex: 2,
                 child: Column(
@@ -84,8 +109,10 @@ class MainScreen extends StatelessWidget {
                           child: MaterialButton(
                             color: Color(0xffECECEC),
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) => SingInScreen()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SingInScreen()));
                             },
                             child: Text(
                               "Sign in",
@@ -118,9 +145,7 @@ class MainScreen extends StatelessWidget {
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           child: MaterialButton(
                             color: Color(0xffECECEC),
-                              onPressed: () {
-
-                              },
+                            onPressed: () {},
                             child: Text(
                               "Sign up",
                               style: TextStyle(
@@ -142,255 +167,304 @@ class MainScreen extends StatelessWidget {
 }
 
 class SingInScreen extends StatefulWidget {
-   SingInScreen({Key? key}) : super(key: key);
+  SingInScreen({Key? key}) : super(key: key);
 
   @override
   State<SingInScreen> createState() => _SingInScreenState();
 }
 
 class _SingInScreenState extends State<SingInScreen> {
- SharedPreferences? pref;
- static const NAME_KEY="name";
- var nameControler= TextEditingController();
+  var formSingInKey = GlobalKey<FormState>();
 
- Future<void> getSharePref()async{
-   pref = await SharedPreferences.getInstance();
-   getName();
- }
- Future<void> setName(String name)async{
-   try{
-   await pref?.setString(NAME_KEY, name);
-   print("successfully saved $name");}
- catch(error){
-   print("Erorr ${error.toString()}");
- }}
-void getName() {
-   String? name =  pref?.getString("name") ;
-   nameControler.text=name ?? "Unknow";
- }
+  SharedPreferences? pref;
+  static const NAME_KEY = "name";
+  static const PASS_KEY = "password";
+  var nameControler = TextEditingController();
+  var passControler = TextEditingController();
 
- @override
- void initState(){
-   getSharePref();
-  // getName();
-   print("object");
-   super.initState();
- }
- //dd3er
+  Future<void> getSharePref() async {
+    pref = await SharedPreferences.getInstance();
+    // getName();
+    // getPassword();
+  }
+
+  Future<void> setPassword(String password) async {
+    try {
+      await pref?.setString(PASS_KEY, password);
+      print("successfully saved $password");
+    } catch (error) {
+      print("Erorr ${error.toString()}");
+    }
+  }
+
+  void getPassword() {
+    String? password = pref?.getString("password");
+    passControler.text = password ?? "Unknow";
+  }
+
+  Future<void> setName(String name) async {
+    try {
+      await pref?.setString(NAME_KEY, name);
+      print("successfully saved $name");
+    } catch (error) {
+      print("Erorr ${error.toString()}");
+    }
+  }
+
+  void getName() {
+    String? name = pref?.getString("name");
+    nameControler.text = name ?? "Unknow";
+  }
+
+  @override
+  void initState() {
+    getSharePref();
+    // getName();
+    print("object");
+    super.initState();
+  }
+
+  //dd3er
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Column(
-              children: [
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                      width: double.infinity,
-                      color: Color(0xff406A52),
-                      child:Image(image: AssetImage("assets/images/img.png"),fit: BoxFit.fill,),
-
-                    )),
-                Expanded(
-                    flex: 2,
-                    child: Column(
-                      children: [
-                        Text(
-                          "Foodapio",
-                          style: TextStyle(
+      body: Form(
+        key: formSingInKey,
+        child: CustomScrollView(
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                        width: double.infinity,
+                        color: Color(0xff406A52),
+                        child: Image(
+                          image: AssetImage("assets/images/img.png"),
+                          fit: BoxFit.fill,
+                        ),
+                      )),
+                  Expanded(
+                      flex: 2,
+                      child: Column(
+                        children: [
+                          Text(
+                            "Foodapio",
+                            style: TextStyle(
+                                fontSize: 32,
+                                color: Color(0xff406A52),
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            "Sign In",
+                            style: TextStyle(
                               fontSize: 32,
                               color: Color(0xff406A52),
-                              fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Text(
-                          "Sign In",
-                          style: TextStyle(
-                            fontSize: 32,
-                            color: Color(0xff406A52),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Text(
-                          "Enter Your Email And Password",
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontFamily: 'Sora',
-                          ),
-                        ),
-                        SizedBox(
-                          height: 22,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 32.0, right: 32.0),
-                          child: Container(
-                            width: 253,
-                            height: 46,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                              BorderRadiusDirectional.all(Radius.circular(46)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xff406A52).withOpacity(0.25),
-                                  spreadRadius: 0,
-                                  blurRadius: 4,
-                                  offset:
-                                  Offset(0, 4), // changes position of shadow
-                                ),
-                              ],
                             ),
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                label: Text(
-                                  "  Email",
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            "Enter Your Email And Password",
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontFamily: 'Sora',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 22,
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 32.0, right: 32.0),
+                            child: Container(
+                              width: 253,
+                              height: 46,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadiusDirectional.all(
+                                    Radius.circular(46)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xff406A52).withOpacity(0.25),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(
+                                        0, 4), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  label: Text(
+                                    "  Email",
+                                    style: TextStyle(
+                                        fontSize: 12, color: Color(0xffa6a6a6)),
+                                  ),
+                                  filled: true,
+                                  fillColor: Color(0xffececec),
+                                  hintText: "Enter Your Email",
+                                  hintStyle: TextStyle(fontSize: 12),
+                                  border: InputBorder.none,
+                                  // prefixIcon: Icon(Icons.email),
+                                ),
+                                // controller: emailController,
+                                onFieldSubmitted: (name) => setName(name),
+
+                                controller: nameControler,
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                validator: (email) {
+                                  if (email?.isEmpty == true) {
+                                    return "Email can't be empty";
+                                  }
+                                },
+                              ),
+                              // TextFormField(
+                              //   decoration: InputDecoration(
+                              //     label: Text(
+                              //       "  Email",
+                              //       style: TextStyle(
+                              //           fontSize: 12, color: Color(0xffa6a6a6)),
+                              //     ),
+                              //     filled: true,
+                              //     fillColor: Color(0xffececec),
+                              //     hintText: "Enter Your Email",
+                              //     border: InputBorder.none,
+                              //     // prefixIcon: Icon(Icons.email),
+                              //   ),
+                              //   // controller: emailController,
+                              //   keyboardType: TextInputType.emailAddress,
+                              //   textInputAction: TextInputAction.next,
+                              //   validator: (email) {
+                              //     if (email?.isEmpty == true) {
+                              //       return "Email can't be empty";
+                              //     }
+                              //   },
+                              // ),
+
+                              // child: MaterialButton(
+                              //   color: Color(0xffECECEC),
+                              //   onPressed: () {},
+                              //   child: Text(
+                              //     "Sign in",
+                              //     style: TextStyle(
+                              //         fontSize: 16, fontWeight: FontWeight.bold),
+                              //   ),
+                              // )
+                            ),
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 32.0, right: 32.0),
+                            child: Container(
+                              width: 253,
+                              height: 46,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadiusDirectional.all(
+                                    Radius.circular(46)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xff406A52).withOpacity(0.25),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(
+                                        0, 4), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  label: Text(
+                                    "  Password",
+                                    style: TextStyle(
+                                        fontSize: 12, color: Color(0xffa6a6a6)),
+                                  ),
+                                  filled: true,
+                                  fillColor: Color(0xffececec),
+                                  hintText: "Enter Your Password",
+                                  hintStyle: TextStyle(fontSize: 12),
+                                  border: InputBorder.none,
+
+                                  // prefixIcon: Icon(Icons.email),
+                                ),
+                                // controller: emailController,
+                                onFieldSubmitted: (password) =>
+                                    setPassword(password),
+                                keyboardType: TextInputType.visiblePassword,
+                                textInputAction: TextInputAction.done,
+                                controller: passControler,
+                                validator: (pass) {
+                                  if (pass?.isEmpty == true) {
+                                    return "Password can't be empty";
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 70,
+                          ),
+                          Container(
+                              height: 64,
+                              width: 329,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadiusDirectional.all(
+                                    Radius.circular(46)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xff406A52).withOpacity(0.25),
+                                    spreadRadius: 0,
+                                    blurRadius: 4,
+                                    offset: Offset(
+                                        0, 4), // changes position of shadow
+                                  ),
+                                ],
+                              ),
+                              clipBehavior: Clip.antiAliasWithSaveLayer,
+                              child: MaterialButton(
+                                color: Color(0xffECECEC),
+                                onPressed: () {
+                                  getPassword();
+                                  getName();
+                                  if (formSingInKey.currentState?.validate() == true) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MainScreen()));
+                                  }
+                                },
+                                child: Text(
+                                  "Sign up",
                                   style: TextStyle(
-                                      fontSize: 12, color: Color(0xffa6a6a6)),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                filled: true,
-                                fillColor: Color(0xffececec),
-                                hintText: "Enter Your Email",
-                                border: InputBorder.none,
-                                // prefixIcon: Icon(Icons.email),
-                              ),
-                              // controller: emailController,
-                              onFieldSubmitted: (name)=>setName(name),
-
-                              controller: nameControler,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              validator: (email) {
-                                if (email?.isEmpty == true) {
-                                  return "Email can't be empty";
-                                }
-                              },
-                            ),
-                            // TextFormField(
-                            //   decoration: InputDecoration(
-                            //     label: Text(
-                            //       "  Email",
-                            //       style: TextStyle(
-                            //           fontSize: 12, color: Color(0xffa6a6a6)),
-                            //     ),
-                            //     filled: true,
-                             //     fillColor: Color(0xffececec),
-                            //     hintText: "Enter Your Email",
-                            //     border: InputBorder.none,
-                            //     // prefixIcon: Icon(Icons.email),
-                            //   ),
-                            //   // controller: emailController,
-                            //   keyboardType: TextInputType.emailAddress,
-                            //   textInputAction: TextInputAction.next,
-                            //   validator: (email) {
-                            //     if (email?.isEmpty == true) {
-                            //       return "Email can't be empty";
-                            //     }
-                            //   },
-                            // ),
-
-                            // child: MaterialButton(
-                            //   color: Color(0xffECECEC),
-                            //   onPressed: () {},
-                            //   child: Text(
-                            //     "Sign in",
-                            //     style: TextStyle(
-                            //         fontSize: 16, fontWeight: FontWeight.bold),
-                            //   ),
-                            // )
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 32.0, right: 32.0),
-                          child: Container(
-                            width: 253,
-                            height: 46,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                              BorderRadiusDirectional.all(Radius.circular(46)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xff406A52).withOpacity(0.25),
-                                  spreadRadius: 0,
-                                  blurRadius: 4,
-                                  offset:
-                                  Offset(0, 4), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                label: Text(
-                                  "  Password",
-                                  style: TextStyle(
-                                      fontSize: 12, color: Color(0xffa6a6a6)),
-                                ),
-                                filled: true,
-                                fillColor: Color(0xffececec),
-                                hintText: "Enter Your Email",
-                                border: InputBorder.none,
-                                // prefixIcon: Icon(Icons.email),
-                              ),
-                              // controller: emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              validator: (email) {
-                                if (email?.isEmpty == true) {
-                                  return "Email can't be empty";
-                                }
-                              },
-                            ),
-
-                          ),
-                        ),
-                        SizedBox(
-                          height: 70,
-                        ),
-                        Container(
-                            height: 64,
-                            width: 329,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadiusDirectional.all(
-                                  Radius.circular(46)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xff406A52).withOpacity(0.25),
-                                  spreadRadius: 0,
-                                  blurRadius: 4,
-                                  offset:
-                                  Offset(0, 4), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: MaterialButton(
-                              color: Color(0xffECECEC),
-                              onPressed: getName,
-                              child: Text(
-                                "Sign up",
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            )),
-                      ],
-                    )),
-             Padding(
-               padding: const EdgeInsets.all(10.0),
-               child: Text("Problems with account?",style: TextStyle(fontSize: 10,color: Color(0xff406A52)),),
-             ) ],
+                              )),
+                        ],
+                      )),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      "Problems with account?",
+                      style: TextStyle(fontSize: 10, color: Color(0xff406A52)),
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
